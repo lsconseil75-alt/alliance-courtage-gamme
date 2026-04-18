@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gamme Financière 2026 - Alliance Courtage</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      'ac-primary': '#1b2851', 'ac-primary-light': '#2a3a6e',
+      'ac-secondary': '#145c80', 'ac-secondary-light': '#1d7ba8',
+      'ac-cream': '#faf9f5', 'ac-cream-dark': '#efeee8', 'ac-ink': '#30302e',
+    },
+    fontFamily: { 'sans': ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'] }
+  }}
+}
+</script>
+<style>
+  body { background-color: #faf9f5; color: #30302e; }
+  .brand-gradient { background: linear-gradient(135deg, #1b2851 0%, #145c80 100%); }
+  .card-hover { transition: all 0.2s ease; }
+  .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(27, 40, 81, 0.15); }
+  .star-filled { color: #f59e0b; } .star-empty { color: #e5e7eb; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #efeee8; }
+  ::-webkit-scrollbar-thumb { background: #1b2851; border-radius: 4px; }
+  .chip-eligible { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #065f46; border: 1px solid #6ee7b7; }
+  .filter-chip { transition: all 0.15s; user-select: none; }
+  .filter-chip.active { background: #1b2851; color: white; border-color: #1b2851; }
+  .sri-dot { display: inline-block; width: 20px; height: 20px; border-radius: 4px; font-size: 12px; line-height: 20px; text-align: center; color: white; font-weight: 600; }
+  .sri-1 { background: #059669; } .sri-2 { background: #65a30d; } .sri-3 { background: #ca8a04; }
+  .sri-4 { background: #ea580c; } .sri-5 { background: #dc2626; } .sri-6 { background: #b91c1c; } .sri-7 { background: #7f1d1d; }
+  .sri-card-header { padding: 1rem 1.5rem; border-radius: 0.75rem 0.75rem 0 0; color: white; }
+  .sri-card-header.s1 { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+  .sri-card-header.s2 { background: linear-gradient(135deg, #65a30d 0%, #84cc16 100%); }
+  .sri-card-header.s3 { background: linear-gradient(135deg, #ca8a04 0%, #eab308 100%); }
+  .sri-card-header.s4 { background: linear-gradient(135deg, #ea580c 0%, #f97316 100%); }
+  .sri-card-header.s5 { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+  .sri-card-header.s6 { background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%); }
+  details[open] summary svg { transform: rotate(180deg); }
+</style>
+</head>
+<body class="font-sans">
+
+<header class="brand-gradient text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-6 py-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-xs uppercase tracking-widest text-blue-200 mb-1">Alliance Courtage</div>
+        <h1 class="text-3xl font-light">Gamme Financière 2026 <span class="text-blue-200 text-base font-normal">v2.1</span></h1>
+        <p class="text-sm text-blue-200 mt-2">50 fonds 5★ · 29 contrats AV/CAPI/PER · Mise à jour <strong class="text-white">Avril 2026</strong></p>
+      </div>
+      <div class="hidden md:block text-right">
+        <div class="text-4xl font-light">50</div>
+        <div class="text-xs text-blue-200 uppercase tracking-wider">fonds 5★</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="bg-white border-b border-ac-cream-dark sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-6">
+    <nav class="flex space-x-1 overflow-x-auto" id="tabs">
+      <button data-tab="contrat" class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-ac-primary text-ac-primary">Par contrat</button>
+      <button data-tab="classe" class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-ac-primary">Par classe</button>
+      <button data-tab="sri" class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-ac-primary">Par profil de risque (SRI)</button>
+      <button data-tab="matrice" class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-ac-primary">Matrice éligibilité</button>
+      <button data-tab="methodo" class="tab-btn whitespace-nowrap px-5 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-ac-primary">Méthodologie</button>
+    </nav>
+  </div>
+</div>
+
+<main class="max-w-7xl mx-auto px-6 py-8">
+
+<!-- BARRE DE FILTRES PARTAGÉE (affichée sur les 3 vues de fonds) -->
+<div id="shared-filter-bar" class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-ac-cream-dark space-y-5">
+  <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <div class="flex-1">
+      <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2 font-semibold">Contrat du client</label>
+      <select id="select-contrat" class="w-full md:w-[540px] px-4 py-3 bg-ac-cream border border-ac-cream-dark rounded-lg focus:outline-none focus:ring-2 focus:ring-ac-primary text-ac-ink font-medium">
+        <option value="__ALL__">— Tous les contrats (gamme complète) —</option>
+      </select>
+    </div>
+    <div class="text-right">
+      <div class="text-3xl font-light text-ac-primary" id="fonds-count">—</div>
+      <div class="text-xs text-gray-500 uppercase tracking-wider">fonds affichés</div>
+    </div>
+  </div>
+  <div>
+    <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2 font-semibold">Classe d'actifs</label>
+    <div id="classe-filters" class="flex flex-wrap gap-2"></div>
+  </div>
+  <div>
+    <div class="flex items-center justify-between mb-2">
+      <label class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Profil de risque (SRI)</label>
+      <span class="text-xs text-gray-400">1 = très faible · 7 = très élevé</span>
+    </div>
+    <div id="sri-filters" class="flex flex-wrap gap-2"></div>
+  </div>
+  <div class="flex items-center justify-between pt-2 border-t border-ac-cream-dark">
+    <div class="text-xs text-gray-500" id="filter-summary">Aucun filtre actif — gamme complète affichée</div>
+    <button id="btn-reset" class="text-xs text-ac-secondary hover:text-ac-primary font-medium">↻ Réinitialiser</button>
+  </div>
+</div>
+
+<!-- Vues -->
+<section id="tab-contrat" class="tab-content"><div id="view-contrat" class="space-y-3"></div></section>
+<section id="tab-classe" class="tab-content hidden"><div id="view-classe" class="space-y-6"></div></section>
+<section id="tab-sri" class="tab-content hidden">
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-ac-cream-dark">
+    <h2 class="text-xl font-light text-ac-primary mb-3">Lecture par profil de risque (SRI)</h2>
+    <p class="text-sm text-gray-700 mb-4">L'indicateur SRI classe chaque fonds de 1 (risque très faible) à 7 (risque très élevé). Cette vue groupe la gamme par niveau de risque, pour faciliter la construction d'une allocation alignée sur le profil client.</p>
+    <div class="border-l-4 border-orange-400 bg-orange-50 pl-4 py-3 text-sm text-gray-800">
+      <strong class="text-orange-800">SRI 7 non représenté</strong> — L'univers des contrats d'assurance-vie AC ne contient aucun fonds SRI 7. Pour un client ultra-offensif, orienter vers un compte-titres direct ou PEA.
+    </div>
+  </div>
+  <div id="view-sri" class="space-y-6"></div>
+</section>
+<section id="tab-matrice" class="tab-content hidden">
+  <div class="bg-white rounded-xl shadow-sm p-6 border border-ac-cream-dark">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-light text-ac-primary">Matrice d'éligibilité complète</h2>
+      <div class="text-xs text-gray-500">✓ = fonds éligible sur le contrat</div>
+    </div>
+    <div class="overflow-auto border border-ac-cream-dark rounded-lg" style="max-height: 75vh;">
+      <table class="min-w-full text-xs" id="matrice-table"></table>
+    </div>
+  </div>
+</section>
+<section id="tab-methodo" class="tab-content hidden">
+  <div class="bg-white rounded-xl shadow-sm p-8 border border-ac-cream-dark max-w-4xl space-y-6">
+    <h2 class="text-2xl font-light text-ac-primary">Méthodologie de sélection v2.1</h2>
+    <div class="border-l-4 border-ac-secondary pl-4 py-2 bg-blue-50/50">
+      <div class="font-semibold text-ac-primary mb-1">Principe fondamental</div>
+      <p class="text-sm text-gray-700">La sélection part de <strong>l'éligibilité réelle</strong> sur les contrats partenaires, avec <strong>quotas SRI par classe</strong> pour une couverture équilibrée des profils de risque 1 à 6.</p>
+    </div>
+    <div>
+      <h3 class="font-semibold text-ac-primary mb-3">Univers de sélection</h3>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="bg-ac-cream rounded-lg p-4 text-center"><div class="text-2xl font-light text-ac-primary">3 571</div><div class="text-xs text-gray-600">fonds éligibles ≥1 contrat AC</div></div>
+        <div class="bg-ac-cream rounded-lg p-4 text-center"><div class="text-2xl font-light text-ac-primary">717</div><div class="text-xs text-gray-600">après filtres qualité</div></div>
+        <div class="bg-ac-cream rounded-lg p-4 text-center"><div class="text-2xl font-light text-ac-primary">50</div><div class="text-xs text-gray-600">fonds retenus</div></div>
+      </div>
+    </div>
+    <div>
+      <h3 class="font-semibold text-ac-primary mb-3">Filtres qualité</h3>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li class="flex items-start"><span class="text-ac-secondary mr-2">■</span>Notation Quantalys ≥ 4★</li>
+        <li class="flex items-start"><span class="text-ac-secondary mr-2">■</span>Encours ≥ 50 M€</li>
+        <li class="flex items-start"><span class="text-ac-secondary mr-2">■</span>Fonds OPCVM/ETF (exclusion structurés, SCPI, actions directes)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="font-semibold text-ac-primary mb-3">Score composite</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3"><div class="font-semibold text-ac-primary">20%</div><div class="text-xs text-gray-600">Notation Quantalys</div></div>
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3"><div class="font-semibold text-ac-primary">20%</div><div class="text-xs text-gray-600">Score Quantalys</div></div>
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3"><div class="font-semibold text-ac-primary">20%</div><div class="text-xs text-gray-600">Performance 5A</div></div>
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3"><div class="font-semibold text-ac-primary">15%</div><div class="text-xs text-gray-600">Sharpe 3A</div></div>
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3"><div class="font-semibold text-ac-primary">10%</div><div class="text-xs text-gray-600">Frais (inversé)</div></div>
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3"><div class="font-semibold text-ac-primary">10%</div><div class="text-xs text-gray-600">Encours</div></div>
+        <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg p-3"><div class="font-semibold text-emerald-700">5%</div><div class="text-xs text-gray-600">Bonus SFDR</div></div>
+      </div>
+    </div>
+    <div>
+      <h3 class="font-semibold text-ac-primary mb-3">Quotas SRI par classe</h3>
+      <table class="w-full text-sm">
+        <thead><tr class="bg-ac-cream text-left"><th class="px-3 py-2">Classe</th><th class="px-3 py-2">Quotas SRI</th></tr></thead>
+        <tbody class="divide-y divide-ac-cream-dark">
+          <tr><td class="px-3 py-2">01 Monétaire</td><td class="px-3 py-2">5 SRI 1</td></tr>
+          <tr><td class="px-3 py-2">02 Oblig. Euro CT</td><td class="px-3 py-2">2 SRI 1 · 3 SRI 2</td></tr>
+          <tr><td class="px-3 py-2">03 Oblig. Euro Div.</td><td class="px-3 py-2">1 SRI 1 · 3 SRI 2 · 1 SRI 3</td></tr>
+          <tr><td class="px-3 py-2">04 Oblig. Monde</td><td class="px-3 py-2">3 SRI 2 · 1 SRI 3 · 1 SRI 5</td></tr>
+          <tr><td class="px-3 py-2">05 HY / Émergents</td><td class="px-3 py-2">2 SRI 2 · 3 SRI 3</td></tr>
+          <tr><td class="px-3 py-2">06 Actions Europe</td><td class="px-3 py-2">1 SRI 3 · 4 SRI 4</td></tr>
+          <tr><td class="px-3 py-2">07 Actions Inter.</td><td class="px-3 py-2">1 SRI 3 · 3 SRI 4 · 1 SRI 5</td></tr>
+          <tr><td class="px-3 py-2">08 Émergents / Asie</td><td class="px-3 py-2">1 SRI 3 · 2 SRI 4 · 2 SRI 5</td></tr>
+          <tr><td class="px-3 py-2">09 Thématiques</td><td class="px-3 py-2">1 SRI 4 · 1 SRI 5 · 3 SRI 6</td></tr>
+          <tr><td class="px-3 py-2">10 Diversifiés</td><td class="px-3 py-2">1 SRI 2 · 3 SRI 3 · 1 SRI 4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="border-l-4 border-orange-400 bg-orange-50 p-4 rounded">
+      <div class="font-semibold text-orange-800 mb-1">Note sur le SRI 7</div>
+      <p class="text-sm text-gray-800">Les profils SRI 7 ne sont <strong>pas adressés</strong> par cette gamme. L'univers des contrats AV AC ne contient aucun fonds SRI 7 (choix des assureurs). Pour un client SRI 7, privilégier un compte-titres direct ou PEA.</p>
+    </div>
+    <div class="text-xs text-gray-500 border-t border-ac-cream-dark pt-4">
+      Source : exports Quantalys des 29 contrats AC · Mise à jour : semestrielle
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div id="fond-modal" class="hidden fixed inset-0 bg-ac-ink/60 z-50 flex items-center justify-center p-4" onclick="if(event.target===this)closeFondModal()">
+  <div class="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+    <div id="fond-modal-content"></div>
+  </div>
+</div>
+
+<script>
+const DATA = {"fonds": [{"classe": "01 - Monétaire / Trésorerie", "rang": 1, "nom": "Amundi Sm Over Ret UCITS ETF Acc", "isin": "LU1190417599", "sg": "Amundi Luxembourg", "cat_quantalys": "Monetaire euro", "note": 5, "score": 83, "sri": 1, "perf_5a": 0.1076, "sharpe_3a": 2.3318, "vol_3a": 0.0012, "frais": 0.0005, "encours_m": 5761, "sfdr": "Article 6", "contrats": ["02_Cardif_Elite", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 81.1}, {"classe": "01 - Monétaire / Trésorerie", "rang": 2, "nom": "Union + IC", "isin": "FR0000009987", "sg": "Credit Mutuel Asset Management", "cat_quantalys": "Monetaire euro", "note": 5, "score": 80, "sri": 1, "perf_5a": 0.1037, "sharpe_3a": 1.7361, "vol_3a": 0.0011, "frais": 0.0006, "encours_m": 16160, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 73.8}, {"classe": "01 - Monétaire / Trésorerie", "rang": 3, "nom": "Generali Tresorerie ISR B", "isin": "FR0010233726", "sg": "Generali AM SGR S.p.A", "cat_quantalys": "Monetaire euro", "note": 5, "score": 82, "sri": 1, "perf_5a": 0.1039, "sharpe_3a": 2.013, "vol_3a": 0.0013, "frais": 0.001, "encours_m": 2312, "sfdr": "Article 8", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "26_Generali_PER_GP_9601", "27_Generali_PERP_5105"], "score_composite": 71.0}, {"classe": "01 - Monétaire / Trésorerie", "rang": 4, "nom": "Ofi Invest ESG Liquidites C/D", "isin": "FR0000008997", "sg": "Ofi Invest Asset Management", "cat_quantalys": "Monetaire euro", "note": 5, "score": 80, "sri": 1, "perf_5a": 0.1044, "sharpe_3a": 1.6017, "vol_3a": 0.0012, "frais": 0.0005, "encours_m": 3918, "sfdr": "Article 8", "contrats": ["08_Selencia_MyPGA"], "score_composite": 67.1}, {"classe": "01 - Monétaire / Trésorerie", "rang": 5, "nom": "CM-AM Dollar Cash IC", "isin": "FR0000984254", "sg": "Credit Mutuel Asset Management", "cat_quantalys": "Monetaire USD", "note": 5, "score": 92, "sri": 1, "perf_5a": 0.2167, "sharpe_3a": 0.0175, "vol_3a": 0.0683, "frais": 0.0015, "encours_m": 527, "sfdr": "Article 8", "contrats": ["05_Generali_Espace_Lux_Vie", "17_Generali_Espace_Lux_Capi"], "score_composite": 66.5}, {"classe": "02 - Obligataire Euro Court Terme", "rang": 1, "nom": "Amundi IS Float Ra Euro Cor ESG UE EUR", "isin": "LU1681041114", "sg": "Amundi Luxembourg", "cat_quantalys": "Oblig. Euro Court Terme", "note": 5, "score": 64, "sri": 1, "perf_5a": 0.1081, "sharpe_3a": 3.0864, "vol_3a": 0.0016, "frais": 0.0018, "encours_m": 1412, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 75.6}, {"classe": "02 - Obligataire Euro Court Terme", "rang": 2, "nom": "Ostrum Credit Ultra Short Plus R/C EUR", "isin": "FR001400CFA4", "sg": "Natixis Investment Managers Interna", "cat_quantalys": "Oblig. Euro Court Terme", "note": 5, "score": 66, "sri": 1, "perf_5a": null, "sharpe_3a": 2.3063, "vol_3a": 0.0027, "frais": 0.0027, "encours_m": 323, "sfdr": "Article 8", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305", "26_Generali_PER_GP_9601"], "score_composite": 58.6}, {"classe": "02 - Obligataire Euro Court Terme", "rang": 3, "nom": "Hugau Obli 1-3 I", "isin": "FR0010613521", "sg": "Richelieu Invest", "cat_quantalys": "Oblig. Euro Court Terme", "note": 5, "score": 75, "sri": 2, "perf_5a": 0.1457, "sharpe_3a": 1.7116, "vol_3a": 0.0106, "frais": 0.0059, "encours_m": 390, "sfdr": "Article 8", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305"], "score_composite": 78.4}, {"classe": "02 - Obligataire Euro Court Terme", "rang": 4, "nom": "Schelcher Short Term P", "isin": "FR0011198332", "sg": "Arkea Asset Management", "cat_quantalys": "Oblig. Euro Court Terme", "note": 5, "score": 65, "sri": 2, "perf_5a": 0.128, "sharpe_3a": 2.0128, "vol_3a": 0.0027, "frais": 0.0032, "encours_m": 688, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "08_Selencia_MyPGA", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "32_ViePlus_PERtinence"], "score_composite": 75.5}, {"classe": "02 - Obligataire Euro Court Terme", "rang": 5, "nom": "Schelcher Flexible Short Duration C", "isin": "FR0010705491", "sg": "Arkea Asset Management", "cat_quantalys": "Oblig. Euro Court Terme", "note": 5, "score": 74, "sri": 2, "perf_5a": 0.1784, "sharpe_3a": 0.9994, "vol_3a": 0.0171, "frais": 0.0047, "encours_m": 226, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "05_Generali_Espace_Lux_Vie", "14_Cardif_Elite_Capi", "17_Generali_Espace_Lux_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 74.1}, {"classe": "03 - Obligataire Euro Diversifié", "rang": 1, "nom": "DWS ESG Floating Rate Notes LC", "isin": "LU1965927921", "sg": "DWS Investments SA", "cat_quantalys": "Oblig. Euro Diversifiees", "note": 4, "score": 49, "sri": 1, "perf_5a": 0.1104, "sharpe_3a": 3.3682, "vol_3a": 0.0019, "frais": 0.0024, "encours_m": 543, "sfdr": "Article 8", "contrats": ["12_ViePlus_Patrimoine", "23_ViePlus_Capi", "32_ViePlus_PERtinence"], "score_composite": 53.2}, {"classe": "03 - Obligataire Euro Diversifié", "rang": 2, "nom": "Omnibond R", "isin": "FR0011147594", "sg": "Flornoy Ferri", "cat_quantalys": "Oblig. Euro Diversifiees", "note": 5, "score": 100, "sri": 2, "perf_5a": 0.216, "sharpe_3a": 1.6944, "vol_3a": 0.0307, "frais": 0.01, "encours_m": 537, "sfdr": "Article 8", "contrats": ["01_Abeille_Epargne_Active", "02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "12_ViePlus_Patrimoine", "13_Abeille_Capi_Active", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "18_MMA_Signature_Premium_Capi", "21_SwissLife_Capi_SP", "23_ViePlus_Capi", "24_Abeille_Retraite_Plurielle", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "28_MMA_Signature_PER", "30_SwissLife_PER_Individuel", "32_ViePlus_PERtinence"], "score_composite": 85.5}, {"classe": "03 - Obligataire Euro Diversifié", "rang": 3, "nom": "AXA WF Euro Credit Tot Ret A EUR Acc", "isin": "LU1164219682", "sg": "BNP Paribas Asset Management Europe", "cat_quantalys": "Oblig. Euro Diversifiees", "note": 5, "score": 86, "sri": 2, "perf_5a": 0.2042, "sharpe_3a": 1.1332, "vol_3a": 0.0329, "frais": 0.0116, "encours_m": 2563, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "30_SwissLife_PER_Individuel", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 81.3}, {"classe": "03 - Obligataire Euro Diversifié", "rang": 4, "nom": "Keren Corporate C", "isin": "FR0010697532", "sg": "Keren Finance", "cat_quantalys": "Oblig. Euro Secteur Prive", "note": 5, "score": 68, "sri": 2, "perf_5a": 0.1361, "sharpe_3a": 1.6725, "vol_3a": 0.0148, "frais": 0.0122, "encours_m": 348, "sfdr": "Article 8", "contrats": ["01_Abeille_Epargne_Active", "02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "13_Abeille_Capi_Active", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "24_Abeille_Retraite_Plurielle", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "27_Generali_PERP_5105", "30_SwissLife_PER_Individuel", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 76.7}, {"classe": "03 - Obligataire Euro Diversifié", "rang": 5, "nom": "La Francaise Sub Debt C", "isin": "FR0010674978", "sg": "Credit Mutuel Asset Management", "cat_quantalys": "Oblig. Europe Diversifiees", "note": 5, "score": 93, "sri": 3, "perf_5a": 0.1096, "sharpe_3a": 1.4136, "vol_3a": 0.0394, "frais": 0.0064, "encours_m": 345, "sfdr": "Article 8", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305"], "score_composite": 73.8}, {"classe": "04 - Obligataire Monde", "rang": 1, "nom": "Lazard Credit Fi SRI PVC EUR", "isin": "FR0010590950", "sg": "Lazard Freres Gestion", "cat_quantalys": "Oblig. Monde Secteur Prive", "note": 5, "score": 76, "sri": 2, "perf_5a": 0.1743, "sharpe_3a": 2.7454, "vol_3a": 0.0237, "frais": 0.003, "encours_m": 1376, "sfdr": "Article 8", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305"], "score_composite": 83.3}, {"classe": "04 - Obligataire Monde", "rang": 2, "nom": "IVO Em Mkt Corporate Debt EUR-R", "isin": "LU1165644672", "sg": "IVO Capital Partners", "cat_quantalys": "Oblig. Monde Secteur Prive", "note": 5, "score": 69, "sri": 2, "perf_5a": 0.2044, "sharpe_3a": 1.4245, "vol_3a": 0.035, "frais": 0.0168, "encours_m": 385, "sfdr": "Article 8", "contrats": ["01_Abeille_Epargne_Active", "02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "13_Abeille_Capi_Active", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "24_Abeille_Retraite_Plurielle", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "27_Generali_PERP_5105", "30_SwissLife_PER_Individuel", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 73.9}, {"classe": "04 - Obligataire Monde", "rang": 3, "nom": "iShares $ Short Dur Corp Bd ETF USD Dis", "isin": "IE00BCRY5Y77", "sg": "BlackRock AM Ireland", "cat_quantalys": "Oblig. USD Secteur Prive", "note": 5, "score": 96, "sri": 2, "perf_5a": 0.1458, "sharpe_3a": 0.0233, "vol_3a": 0.0678, "frais": 0.002, "encours_m": 1327, "sfdr": "Article 6", "contrats": ["02_Cardif_Elite", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 72.3}, {"classe": "04 - Obligataire Monde", "rang": 4, "nom": "Lazard Capital Fi SRI PVC EUR", "isin": "FR0010952788", "sg": "Lazard Freres Gestion", "cat_quantalys": "Oblig. Monde Secteur Prive", "note": 5, "score": 100, "sri": 3, "perf_5a": 0.2135, "sharpe_3a": 2.2879, "vol_3a": 0.042, "frais": 0.01, "encours_m": 357, "sfdr": "Article 8", "contrats": ["05_Generali_Espace_Lux_Vie", "17_Generali_Espace_Lux_Capi"], "score_composite": 79.3}, {"classe": "04 - Obligataire Monde", "rang": 5, "nom": "H2O Multibonds FCP EUR R(C)", "isin": "FR0013393329", "sg": "H2O AM Europe", "cat_quantalys": "Oblig. Monde Diversifiees", "note": 4, "score": 54, "sri": 5, "perf_5a": 0.6978, "sharpe_3a": 0.1969, "vol_3a": 0.1693, "frais": 0.016, "encours_m": 1009, "sfdr": "Article 6", "contrats": ["08_Selencia_MyPGA", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "17_Generali_Espace_Lux_Capi", "18_MMA_Signature_Premium_Capi", "22_UAF_Version_Absolue_Capi_2", "28_MMA_Signature_PER", "29_Selencia_PER_Zen", "31_UAF_Version_Absolue_Retraite"], "score_composite": 44.6}, {"classe": "05 - Obligataire High Yield / Émergents", "rang": 1, "nom": "BNY Mellon GF Gbl SD HYB Fd EUR H Acc H", "isin": "IE00BD5CTX77", "sg": "BNY Mellon Fund Management Lux", "cat_quantalys": "Oblig. Monde Ht Rendt", "note": 5, "score": 67, "sri": 2, "perf_5a": 0.2031, "sharpe_3a": 1.1448, "vol_3a": 0.0271, "frais": 0.0133, "encours_m": 246, "sfdr": "Article 8", "contrats": ["01_Abeille_Epargne_Active", "12_ViePlus_Patrimoine", "13_Abeille_Capi_Active", "23_ViePlus_Capi", "24_Abeille_Retraite_Plurielle", "32_ViePlus_PERtinence"], "score_composite": 80.1}, {"classe": "05 - Obligataire High Yield / Émergents", "rang": 2, "nom": "IVO EM Corp Debt Short Dur SRI R", "isin": "LU2061939729", "sg": "IVO Capital Partners", "cat_quantalys": "Oblig. Pays Emerg. Monde", "note": 5, "score": 83, "sri": 2, "perf_5a": 0.1708, "sharpe_3a": 2.0885, "vol_3a": 0.0211, "frais": 0.0152, "encours_m": 150, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "30_SwissLife_PER_Individuel", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 77.3}, {"classe": "05 - Obligataire High Yield / Émergents", "rang": 3, "nom": "Tikehau European High Yield R-Acc-EUR", "isin": "FR0010460493", "sg": "Tikehau Investment Management", "cat_quantalys": "Oblig. Europe Ht Rendt", "note": 5, "score": 81, "sri": 3, "perf_5a": 0.1621, "sharpe_3a": 1.7918, "vol_3a": 0.0267, "frais": 0.01, "encours_m": 192, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "27_Generali_PERP_5105", "30_SwissLife_PER_Individuel", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 76.9}, {"classe": "05 - Obligataire High Yield / Émergents", "rang": 4, "nom": "MSIF Emerging Mkt Debt Opport Fd A USD", "isin": "LU2630425226", "sg": "MSIM Fund Management (Ireland) Ltd", "cat_quantalys": "Oblig. Pays Emerg. Monde", "note": 5, "score": 89, "sri": 3, "perf_5a": 0.4199, "sharpe_3a": 1.1008, "vol_3a": 0.0684, "frais": 0.0163, "encours_m": 151, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 72.2}, {"classe": "05 - Obligataire High Yield / Émergents", "rang": 5, "nom": "Vontobel Emerging Mrkts Debt H h EUR", "isin": "LU0926439992", "sg": "Vontobel Asset Management AG", "cat_quantalys": "Oblig. Pays Emerg. Monde", "note": 5, "score": 72, "sri": 3, "perf_5a": 0.0924, "sharpe_3a": 1.1421, "vol_3a": 0.0655, "frais": 0.0141, "encours_m": 144, "sfdr": "Article 8", "contrats": ["05_Generali_Espace_Lux_Vie"], "score_composite": 52.7}, {"classe": "06 - Actions Europe / Zone Euro", "rang": 1, "nom": "Amundi Idx MSCI Eur High Div Factor UE ¬", "isin": "LU1681041973", "sg": "Amundi Luxembourg", "cat_quantalys": "Act. Europe", "note": 5, "score": 86, "sri": 3, "perf_5a": 0.7653, "sharpe_3a": 0.995, "vol_3a": 0.1148, "frais": 0.0023, "encours_m": 458, "sfdr": "Article 6", "contrats": ["08_Selencia_MyPGA", "29_Selencia_PER_Zen"], "score_composite": 74.5}, {"classe": "06 - Actions Europe / Zone Euro", "rang": 2, "nom": "M&G Lux European Strat Val Fd A EUR Acc", "isin": "LU1670707527", "sg": "M&G Luxembourg SA", "cat_quantalys": "Act. Europe Value", "note": 5, "score": 97, "sri": 4, "perf_5a": 1.0563, "sharpe_3a": 1.2072, "vol_3a": 0.1193, "frais": 0.0163, "encours_m": 2673, "sfdr": "Article 8", "contrats": ["01_Abeille_Epargne_Active", "02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "12_ViePlus_Patrimoine", "13_Abeille_Capi_Active", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "23_ViePlus_Capi", "24_Abeille_Retraite_Plurielle", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "32_ViePlus_PERtinence"], "score_composite": 90.2}, {"classe": "06 - Actions Europe / Zone Euro", "rang": 3, "nom": "JPMF Europe Equity Plus A Perf Acc EUR", "isin": "LU0289089384", "sg": "JPMorgan Asset Management (Europe)", "cat_quantalys": "Act. Europe Growth", "note": 5, "score": 100, "sri": 4, "perf_5a": 0.9387, "sharpe_3a": 1.1921, "vol_3a": 0.1211, "frais": 0.0174, "encours_m": 1567, "sfdr": "Article 8", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305", "26_Generali_PER_GP_9601"], "score_composite": 83.7}, {"classe": "06 - Actions Europe / Zone Euro", "rang": 4, "nom": "Alken Euro Opportunities R", "isin": "LU0235308482", "sg": "AFFM SA", "cat_quantalys": "Act. Europe", "note": 5, "score": 100, "sri": 4, "perf_5a": 1.3297, "sharpe_3a": 1.0448, "vol_3a": 0.1537, "frais": 0.0185, "encours_m": 428, "sfdr": "Article 8", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "22_UAF_Version_Absolue_Capi_2", "26_Generali_PER_GP_9601", "29_Selencia_PER_Zen", "31_UAF_Version_Absolue_Retraite"], "score_composite": 82.8}, {"classe": "06 - Actions Europe / Zone Euro", "rang": 5, "nom": "Alken European Opportunities EU1", "isin": "LU0866838575", "sg": "AFFM SA", "cat_quantalys": "Act. Europe", "note": 5, "score": 100, "sri": 4, "perf_5a": 1.3804, "sharpe_3a": 1.0752, "vol_3a": 0.1537, "frais": 0.0135, "encours_m": 305, "sfdr": "Article 8", "contrats": ["05_Generali_Espace_Lux_Vie", "17_Generali_Espace_Lux_Capi"], "score_composite": 82.0}, {"classe": "07 - Actions Internationales", "rang": 1, "nom": "HMG Globetrotter C", "isin": "FR0010241240", "sg": "HMG Finance", "cat_quantalys": "Act. Monde", "note": 5, "score": 82, "sri": 3, "perf_5a": 0.7688, "sharpe_3a": 1.3829, "vol_3a": 0.0874, "frais": 0.02, "encours_m": 89, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 66.4}, {"classe": "07 - Actions Internationales", "rang": 2, "nom": "Amundi Core S&P 500 Swap ETF Acc EUR", "isin": "LU1135865084", "sg": "Amundi Luxembourg", "cat_quantalys": "Act. Etats-Unis", "note": 5, "score": 93, "sri": 4, "perf_5a": 0.827, "sharpe_3a": 0.8955, "vol_3a": 0.1437, "frais": 0.0009, "encours_m": 13499, "sfdr": "Article 6", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601"], "score_composite": 87.0}, {"classe": "07 - Actions Internationales", "rang": 3, "nom": "Amundi Core S&P 500 Swap ETF EUR Dis EUR", "isin": "LU0496786574", "sg": "Amundi Luxembourg", "cat_quantalys": "Act. Etats-Unis", "note": 5, "score": 93, "sri": 4, "perf_5a": 0.827, "sharpe_3a": 0.8949, "vol_3a": 0.1438, "frais": 0.0009, "encours_m": 2785, "sfdr": "Article 6", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "32_ViePlus_PERtinence"], "score_composite": 84.9}, {"classe": "07 - Actions Internationales", "rang": 4, "nom": "iShares S&P 500 Swap UCITS ETF USD Acc", "isin": "IE00BMTX1Y45", "sg": "BlackRock AM Ireland", "cat_quantalys": "Act. Etats-Unis", "note": 5, "score": 93, "sri": 4, "perf_5a": 0.8336, "sharpe_3a": 0.907, "vol_3a": 0.1435, "frais": 0.0007, "encours_m": 9742, "sfdr": "Article 6", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305", "26_Generali_PER_GP_9601"], "score_composite": 81.8}, {"classe": "07 - Actions Internationales", "rang": 5, "nom": "Amundi Core Nasdaq-100 Swap ETF Acc EUR", "isin": "LU1829221024", "sg": "Amundi Luxembourg", "cat_quantalys": "Act. Etats-Unis Growth", "note": 5, "score": 74, "sri": 5, "perf_5a": 0.9471, "sharpe_3a": 0.9079, "vol_3a": 0.1862, "frais": 0.0022, "encours_m": 4492, "sfdr": "Article 6", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 81.3}, {"classe": "08 - Actions Émergents / Asie", "rang": 1, "nom": "SISF Frontier Markets Eq A Acc", "isin": "LU0562313402", "sg": "Schroder Investment Mgt (Europe)", "cat_quantalys": "Act. Pays Emerg. Monde", "note": 5, "score": 100, "sri": 3, "perf_5a": 1.1188, "sharpe_3a": 1.6649, "vol_3a": 0.1046, "frais": 0.0193, "encours_m": 250, "sfdr": "Article 6", "contrats": ["02_Cardif_Elite", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 74.5}, {"classe": "08 - Actions Émergents / Asie", "rang": 2, "nom": "iShares MSCI Japan EUR H ETF EUR Acc", "isin": "IE00B42Z5J44", "sg": "BlackRock AM Ireland", "cat_quantalys": "Act. Japon", "note": 5, "score": 98, "sri": 4, "perf_5a": 1.2341, "sharpe_3a": 1.2649, "vol_3a": 0.1792, "frais": 0.0064, "encours_m": 1124, "sfdr": "Article 6", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305", "26_Generali_PER_GP_9601"], "score_composite": 78.7}, {"classe": "08 - Actions Émergents / Asie", "rang": 3, "nom": "BNPP Japan Small Cap Classic H EUR Acc", "isin": "LU0194438841", "sg": "BNP Paribas Asset Management Lux", "cat_quantalys": "Act. Japon Ptes/Moy Cap", "note": 5, "score": 100, "sri": 4, "perf_5a": 1.3612, "sharpe_3a": 1.6483, "vol_3a": 0.1616, "frais": 0.0231, "encours_m": 151, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "08_Selencia_MyPGA", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 78.1}, {"classe": "08 - Actions Émergents / Asie", "rang": 4, "nom": "Franklin FTSE Korea ETF Singlclass", "isin": "IE00BHZRR030", "sg": "Franklin Templeton IS", "cat_quantalys": "Act. Pays Emerg. autres pays", "note": 5, "score": 74, "sri": 5, "perf_5a": 0.7355, "sharpe_3a": 0.8377, "vol_3a": 0.2477, "frais": 0.0009, "encours_m": 2936, "sfdr": "Article 6", "contrats": ["02_Cardif_Elite", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 75.7}, {"classe": "08 - Actions Émergents / Asie", "rang": 5, "nom": "CM-AM Indiciel Japon 225 RC", "isin": "FR0010415448", "sg": "Credit Mutuel Asset Management", "cat_quantalys": "Act. Japon", "note": 5, "score": 100, "sri": 5, "perf_5a": 1.1589, "sharpe_3a": 1.1649, "vol_3a": 0.1952, "frais": 0.0065, "encours_m": 126, "sfdr": "Article 6", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305", "26_Generali_PER_GP_9601"], "score_composite": 72.9}, {"classe": "09 - Actions Thématiques / Sectorielles", "rang": 1, "nom": "JH Global Life Sciences Fund H2 USD", "isin": "IE00BFRSYJ83", "sg": "Janus Henderson Investors Europe SA", "cat_quantalys": "Act. Sect. Sante-Pharmacie", "note": 5, "score": 93, "sri": 4, "perf_5a": 0.4716, "sharpe_3a": 0.3467, "vol_3a": 0.1512, "frais": 0.0086, "encours_m": 783, "sfdr": "Article 8", "contrats": ["05_Generali_Espace_Lux_Vie", "17_Generali_Espace_Lux_Capi"], "score_composite": 60.6}, {"classe": "09 - Actions Thématiques / Sectorielles", "rang": 2, "nom": "Amundi Euro Stoxx Banks UE Acc EUR", "isin": "LU1829219390", "sg": "Amundi Luxembourg", "cat_quantalys": "Act. Sect. Serv. Financiers", "note": 5, "score": 83, "sri": 5, "perf_5a": 3.0253, "sharpe_3a": 1.7901, "vol_3a": 0.2096, "frais": 0.003, "encours_m": 5037, "sfdr": "Article 6", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "12_ViePlus_Patrimoine", "15_Himalia_Capi_8305", "26_Generali_PER_GP_9601"], "score_composite": 85.7}, {"classe": "09 - Actions Thématiques / Sectorielles", "rang": 3, "nom": "VanEck Vector Semiconductor ETF USD A", "isin": "IE00BMC38736", "sg": "VanEck Asset Management B.V.", "cat_quantalys": "Act. Sect. Technologies", "note": 5, "score": 78, "sri": 6, "perf_5a": 2.3782, "sharpe_3a": 1.0759, "vol_3a": 0.3077, "frais": 0.0035, "encours_m": 4651, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "14_Cardif_Elite_Capi", "25_Cardif_Elite_Retraite"], "score_composite": 80.1}, {"classe": "09 - Actions Thématiques / Sectorielles", "rang": 4, "nom": "EdR Goldsphere A EUR", "isin": "FR0010664086", "sg": "Edmond de Rothschild AM", "cat_quantalys": "Act. Sect. Or", "note": 4, "score": 73, "sri": 6, "perf_5a": 2.4006, "sharpe_3a": 1.151, "vol_3a": 0.3603, "frais": 0.0209, "encours_m": 158, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 55.9}, {"classe": "09 - Actions Thématiques / Sectorielles", "rang": 5, "nom": "iShares Blockchain Technol ETF USD Acc", "isin": "IE000RDRMSD1", "sg": "BlackRock AM Ireland", "cat_quantalys": "Act. Sect. Technologies", "note": 5, "score": 70, "sri": 6, "perf_5a": null, "sharpe_3a": 0.5108, "vol_3a": 0.5662, "frais": 0.005, "encours_m": 229, "sfdr": "Article 6", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "15_Himalia_Capi_8305", "26_Generali_PER_GP_9601"], "score_composite": 39.9}, {"classe": "10 - Diversifiés / Flexibles", "rang": 1, "nom": "Helium Selection B-EUR", "isin": "LU1112771503", "sg": "Syquant Capital", "cat_quantalys": "Perf. abs. euro Arbitrage M&A", "note": 5, "score": 90, "sri": 2, "perf_5a": 0.3264, "sharpe_3a": 1.2899, "vol_3a": 0.0214, "frais": 0.0192, "encours_m": 750, "sfdr": "Article 8", "contrats": ["01_Abeille_Epargne_Active", "02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "13_Abeille_Capi_Active", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "24_Abeille_Retraite_Plurielle", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "30_SwissLife_PER_Individuel", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 80.5}, {"classe": "10 - Diversifiés / Flexibles", "rang": 2, "nom": "GF Ambition Solidaire P", "isin": "FR0007020201", "sg": "BNP Paribas Asset Management Europe", "cat_quantalys": "Alloc Flexible Europe", "note": 5, "score": 85, "sri": 3, "perf_5a": 0.5878, "sharpe_3a": 0.9804, "vol_3a": 0.0963, "frais": 0.0131, "encours_m": 384, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "27_Generali_PERP_5105"], "score_composite": 84.1}, {"classe": "10 - Diversifiés / Flexibles", "rang": 3, "nom": "Carmignac Invest Latitude A EUR Acc", "isin": "FR0010147603", "sg": "Carmignac Gestion", "cat_quantalys": "Alloc Flexible Monde", "note": 5, "score": 98, "sri": 3, "perf_5a": 0.341, "sharpe_3a": 1.0977, "vol_3a": 0.086, "frais": 0.018, "encours_m": 219, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "27_Generali_PERP_5105", "29_Selencia_PER_Zen", "30_SwissLife_PER_Individuel", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 79.4}, {"classe": "10 - Diversifiés / Flexibles", "rang": 4, "nom": "LifeStrategy 80% Equity UCITS ETF EUR Ac", "isin": "IE00BMVB5R75", "sg": "Vanguard Group (Ireland) Limited", "cat_quantalys": "Alloc Offensive Monde", "note": 5, "score": 80, "sri": 3, "perf_5a": 0.479, "sharpe_3a": 0.8662, "vol_3a": 0.1004, "frais": 0.0025, "encours_m": 981, "sfdr": "Article 6", "contrats": ["03_Himalia_8301", "04_Himalia_Patrimoine_6701", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "15_Himalia_Capi_8305", "22_UAF_Version_Absolue_Capi_2", "26_Generali_PER_GP_9601", "31_UAF_Version_Absolue_Retraite"], "score_composite": 77.6}, {"classe": "10 - Diversifiés / Flexibles", "rang": 5, "nom": "Ginjer Actifs 360 A", "isin": "FR0011153014", "sg": "Ginjer AM", "cat_quantalys": "Alloc Flexible Europe", "note": 5, "score": 84, "sri": 4, "perf_5a": 0.5978, "sharpe_3a": 0.8522, "vol_3a": 0.1136, "frais": 0.0185, "encours_m": 163, "sfdr": "Article 8", "contrats": ["02_Cardif_Elite", "03_Himalia_8301", "04_Himalia_Patrimoine_6701", "05_Generali_Espace_Lux_Vie", "08_Selencia_MyPGA", "10_Swisslife_Strategic_Premium", "11_UAF_Version_Absolue", "11_UAF_Version_Absolue2", "12_ViePlus_Patrimoine", "14_Cardif_Elite_Capi", "15_Himalia_Capi_8305", "17_Generali_Espace_Lux_Capi", "18_MMA_Signature_Premium_Capi", "21_SwissLife_Capi_SP", "22_UAF_Version_Absolue_Capi_2", "23_ViePlus_Capi", "25_Cardif_Elite_Retraite", "26_Generali_PER_GP_9601", "28_MMA_Signature_PER", "30_SwissLife_PER_Individuel", "31_UAF_Version_Absolue_Retraite", "32_ViePlus_PERtinence"], "score_composite": 75.4}], "contrats": {"01_Abeille_Epargne_Active": {"nom": "Abeille Épargne Active", "assureur": "Abeille Assurances", "type": "AV"}, "02_Cardif_Elite": {"nom": "Cardif Elite", "assureur": "Cardif", "type": "AV"}, "03_Himalia_8301": {"nom": "Himalia 8301", "assureur": "Generali Patrimoine", "type": "AV"}, "04_Himalia_Patrimoine_6701": {"nom": "Himalia Patrimoine 6701", "assureur": "Generali Patrimoine", "type": "AV"}, "05_Generali_Espace_Lux_Vie": {"nom": "Generali Espace Lux Vie France", "assureur": "Generali Luxembourg", "type": "AV"}, "08_Selencia_MyPGA": {"nom": "Selencia MyPGA", "assureur": "Selencia", "type": "AV"}, "09_Selencia_PGA_AV": {"nom": "Selencia PGA", "assureur": "Selencia", "type": "AV"}, "10_Swisslife_Strategic_Premium": {"nom": "SwissLife Strategic Premium", "assureur": "Swiss Life", "type": "AV"}, "11_UAF_Version_Absolue": {"nom": "UAF Version Absolue", "assureur": "UAF Life Patrimoine", "type": "AV"}, "11_UAF_Version_Absolue2": {"nom": "UAF Version Absolue 2", "assureur": "UAF Life Patrimoine", "type": "AV"}, "12_ViePlus_Patrimoine": {"nom": "Vie Plus Patrimoine", "assureur": "Vie Plus", "type": "AV"}, "13_Abeille_Capi_Active": {"nom": "Abeille Capitalisation Active", "assureur": "Abeille Assurances", "type": "CAPI"}, "14_Cardif_Elite_Capi": {"nom": "Cardif Elite Capitalisation", "assureur": "Cardif", "type": "CAPI"}, "15_Himalia_Capi_8305": {"nom": "Himalia Capitalisation 8305", "assureur": "Generali Patrimoine", "type": "CAPI"}, "17_Generali_Espace_Lux_Capi": {"nom": "Generali Espace Lux Capi France", "assureur": "Generali Luxembourg", "type": "CAPI"}, "18_MMA_Signature_Premium_Capi": {"nom": "MMA Signature Premium Capitalisation", "assureur": "MMA", "type": "CAPI"}, "20_Selencia_PGA_Capi": {"nom": "Selencia PGA Capitalisation", "assureur": "Selencia", "type": "CAPI"}, "21_SwissLife_Capi_SP": {"nom": "SwissLife Capi Strategic Premium", "assureur": "Swiss Life", "type": "CAPI"}, "22_UAF_Version_Absolue_Capi_2": {"nom": "UAF Version Absolue Capi 2", "assureur": "UAF Life Patrimoine", "type": "CAPI"}, "23_ViePlus_Capi": {"nom": "Vie Plus Capitalisation", "assureur": "Vie Plus", "type": "CAPI"}, "24_Abeille_Retraite_Plurielle": {"nom": "Abeille Retraite Plurielle", "assureur": "Abeille Assurances", "type": "PER"}, "25_Cardif_Elite_Retraite": {"nom": "Cardif Elite Retraite", "assureur": "Cardif", "type": "PER"}, "26_Generali_PER_GP_9601": {"nom": "Generali PER Generali Patrimoine 9601", "assureur": "Generali Patrimoine", "type": "PER"}, "27_Generali_PERP_5105": {"nom": "Generali PERP Generali Patrimoine 5105", "assureur": "Generali Patrimoine", "type": "PERP"}, "28_MMA_Signature_PER": {"nom": "MMA Signature PER", "assureur": "MMA", "type": "PER"}, "29_Selencia_PER_Zen": {"nom": "Selencia PER Zen", "assureur": "Selencia", "type": "PER"}, "30_SwissLife_PER_Individuel": {"nom": "SwissLife PER Individuel", "assureur": "Swiss Life", "type": "PER"}, "31_UAF_Version_Absolue_Retraite": {"nom": "UAF Version Absolue Retraite", "assureur": "UAF Life Patrimoine", "type": "PER"}, "32_ViePlus_PERtinence": {"nom": "Vie Plus PERtinence Retraite", "assureur": "Vie Plus", "type": "PER"}}};
+const fonds = DATA.fonds;
+const contrats = DATA.contrats;
+
+fonds.sort((a,b) => a.classe.localeCompare(b.classe) || (a.sri||99) - (b.sri||99) || b.score_composite - a.score_composite);
+
+const state = { contrat: "__ALL__", classes: new Set(), sri: new Set(), currentTab: "contrat" };
+
+// Init selecteur contrat
+const sel = document.getElementById('select-contrat');
+const contratsSorted = Object.entries(contrats).sort((a,b) => a[1].nom.localeCompare(b[1].nom));
+contratsSorted.forEach(([k, c]) => {
+  const opt = document.createElement('option');
+  opt.value = k; opt.textContent = c.nom + ' (' + c.type + ' — ' + c.assureur + ')';
+  sel.appendChild(opt);
+});
+
+// Init chips classes
+const allClasses = [...new Set(fonds.map(f => f.classe))].sort();
+const classeFiltersEl = document.getElementById('classe-filters');
+const classeAllBtn = document.createElement('button');
+classeAllBtn.className = 'filter-chip active px-3 py-1.5 text-xs font-medium rounded-full border border-ac-primary text-white bg-ac-primary';
+classeAllBtn.textContent = 'Toutes';
+classeAllBtn.dataset.classe = '__ALL__';
+classeFiltersEl.appendChild(classeAllBtn);
+allClasses.forEach(cl => {
+  const b = document.createElement('button');
+  b.className = 'filter-chip px-3 py-1.5 text-xs font-medium rounded-full border border-ac-cream-dark bg-white text-ac-ink hover:border-ac-primary';
+  b.textContent = cl; b.dataset.classe = cl;
+  classeFiltersEl.appendChild(b);
+});
+
+// Init chips SRI
+const sriEl = document.getElementById('sri-filters');
+const sriAllBtn = document.createElement('button');
+sriAllBtn.className = 'filter-chip active px-3 py-1.5 text-xs font-medium rounded-full border border-ac-primary text-white bg-ac-primary';
+sriAllBtn.textContent = 'Tous niveaux';
+sriAllBtn.dataset.sri = '__ALL__';
+sriEl.appendChild(sriAllBtn);
+for (let i = 1; i <= 7; i++) {
+  const b = document.createElement('button');
+  b.className = 'filter-chip px-3 py-1.5 text-xs font-medium rounded-full border border-ac-cream-dark bg-white text-ac-ink hover:border-ac-primary flex items-center gap-1.5';
+  b.innerHTML = `<span class="sri-dot sri-${i}">${i}</span><span>SRI ${i}</span>`;
+  b.dataset.sri = String(i);
+  sriEl.appendChild(b);
+}
+
+// Helpers
+function starRating(n) {
+  let s = '';
+  for (let i = 0; i < 5; i++) s += '<span class="' + (i < n ? 'star-filled' : 'star-empty') + '">★</span>';
+  return '<span class="text-sm">' + s + '</span>';
+}
+const fmtPct = v => v == null ? '—' : (v*100).toFixed(2) + '%';
+const fmtNum = v => v == null ? '—' : v.toFixed(2);
+const fmtMeuro = v => v == null ? '—' : v.toLocaleString('fr-FR') + ' M€';
+
+function cardFond(f) {
+  const nb = f.contrats.length;
+  const sfdrBadge = f.sfdr && f.sfdr.includes('9') ? '<span class="inline-block text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-medium">Art. 9 SFDR</span>' :
+    f.sfdr && f.sfdr.includes('8') ? '<span class="inline-block text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">Art. 8 SFDR</span>' : '';
+  return `
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-ac-cream-dark card-hover cursor-pointer" onclick="openFondModal('${f.isin}')">
+      <div class="flex items-start justify-between mb-2">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-xs uppercase tracking-wider text-gray-500">${f.classe}</span>
+            ${f.sri ? '<span class="sri-dot sri-'+f.sri+'" title="SRI '+f.sri+'">'+f.sri+'</span>' : ''}
+          </div>
+          <h3 class="font-semibold text-ac-primary text-base">${f.nom}</h3>
+          <div class="text-xs text-gray-500 mt-1">${f.sg} • ISIN ${f.isin}</div>
+        </div>
+        <div class="text-right ml-4">${starRating(f.note)}<div class="text-xs text-gray-500 mt-1">Score ${f.score}/100</div></div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 pt-3 border-t border-ac-cream-dark">
+        <div><div class="text-xs text-gray-500">Perf 5A</div><div class="font-semibold ${f.perf_5a && f.perf_5a > 0 ? 'text-emerald-700' : 'text-ac-ink'}">${fmtPct(f.perf_5a)}</div></div>
+        <div><div class="text-xs text-gray-500">Sharpe 3A</div><div class="font-semibold">${fmtNum(f.sharpe_3a)}</div></div>
+        <div><div class="text-xs text-gray-500">Frais</div><div class="font-semibold">${fmtPct(f.frais)}</div></div>
+        <div><div class="text-xs text-gray-500">Encours</div><div class="font-semibold">${fmtMeuro(f.encours_m)}</div></div>
+        <div><div class="text-xs text-gray-500">Éligible sur</div><div class="font-semibold text-ac-secondary">${nb} contrat${nb>1?'s':''}</div></div>
+      </div>
+      ${sfdrBadge ? '<div class="mt-3">' + sfdrBadge + '</div>' : ''}
+    </div>
+  `;
+}
+
+// Filtres : fonction commune pour appliquer l'état aux fonds
+function applyFilters() {
+  let r = fonds;
+  if (state.contrat !== '__ALL__') r = r.filter(f => f.contrats.includes(state.contrat));
+  if (state.classes.size > 0) r = r.filter(f => state.classes.has(f.classe));
+  if (state.sri.size > 0) r = r.filter(f => f.sri && state.sri.has(f.sri));
+  return r;
+}
+
+function updateSummary(count) {
+  document.getElementById('fonds-count').textContent = count;
+  const parts = [];
+  if (state.contrat !== '__ALL__') parts.push('Contrat : <strong>' + contrats[state.contrat].nom + '</strong>');
+  if (state.classes.size > 0) parts.push('Classes : <strong>' + state.classes.size + '</strong>');
+  if (state.sri.size > 0) parts.push('SRI : <strong>' + [...state.sri].sort().join(', ') + '</strong>');
+  document.getElementById('filter-summary').innerHTML = parts.length ? parts.join(' · ') : 'Aucun filtre actif — gamme complète affichée';
+}
+
+// === RENDERS — tous les rendus utilisent applyFilters() ===
+function renderContrat() {
+  const filtered = applyFilters();
+  updateSummary(filtered.length);
+  const container = document.getElementById('view-contrat');
+  if (filtered.length === 0) {
+    container.innerHTML = emptyState();
+    return;
+  }
+  const byCl = {};
+  filtered.forEach(f => { if (!byCl[f.classe]) byCl[f.classe] = []; byCl[f.classe].push(f); });
+  container.innerHTML = Object.keys(byCl).sort().map(cl => `
+    <details open><summary class="flex items-center justify-between cursor-pointer py-3 px-4 bg-ac-cream-dark/50 rounded-lg font-medium text-ac-primary">
+      <span>${cl} <span class="text-xs text-gray-500 ml-2">${byCl[cl].length} fonds</span></span>
+      <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </summary><div class="space-y-2 mt-2">${byCl[cl].map(cardFond).join('')}</div></details>
+  `).join('');
+}
+
+function renderClasse() {
+  const filtered = applyFilters();
+  updateSummary(filtered.length);
+  const container = document.getElementById('view-classe');
+  if (filtered.length === 0) {
+    container.innerHTML = emptyState();
+    return;
+  }
+  const byCl = {};
+  filtered.forEach(f => { if (!byCl[f.classe]) byCl[f.classe] = []; byCl[f.classe].push(f); });
+  container.innerHTML = Object.keys(byCl).sort().map(cl => {
+    const fc = byCl[cl];
+    const avgCov = (fc.reduce((s,f) => s + f.contrats.length, 0) / fc.length).toFixed(1);
+    return `<div class="bg-white rounded-xl p-6 shadow-sm border border-ac-cream-dark">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-ac-cream-dark">
+        <h2 class="text-lg font-semibold text-ac-primary">${cl}</h2>
+        <div class="text-xs text-gray-500">${fc.length} fonds · couverture moy. ${avgCov} contrats</div>
+      </div><div class="space-y-2">${fc.map(cardFond).join('')}</div></div>`;
+  }).join('');
+}
+
+const sriDescriptions = {
+  1: {titre:"Défensif maximum", desc:"Capital garanti priorité absolue. Horizon court, aversion totale au risque."},
+  2: {titre:"Très prudent", desc:"Capital préservé. Rendement modeste accepté. Horizon 1-3 ans."},
+  3: {titre:"Prudent", desc:"Légère prise de risque pour un rendement régulier. Horizon 2-5 ans."},
+  4: {titre:"Équilibré", desc:"Mix obligations / actions. Volatilité modérée acceptée. Horizon 3-7 ans."},
+  5: {titre:"Dynamique", desc:"Majorité actions diversifiées. Horizon moyen-long 5-10 ans."},
+  6: {titre:"Offensif", desc:"Actions sectorielles / émergents / thématiques. Horizon long 7+ ans."},
+  7: {titre:"Très offensif", desc:"Profil non couvert par la gamme AV (voir méthodologie)."},
+};
+
+function renderSri() {
+  const filtered = applyFilters();
+  updateSummary(filtered.length);
+  const container = document.getElementById('view-sri');
+  const bySri = {};
+  for (let i = 1; i <= 7; i++) bySri[i] = [];
+  filtered.forEach(f => { if (f.sri && bySri[f.sri]) bySri[f.sri].push(f); });
+  
+  if (filtered.length === 0) {
+    container.innerHTML = emptyState();
+    return;
+  }
+  
+  const showSri7 = state.sri.size === 0 || state.sri.has(7);
+  
+  container.innerHTML = Object.keys(bySri).map(s => {
+    const fc = bySri[s];
+    const desc = sriDescriptions[s];
+    // N'afficher que les SRI qui ont des fonds (sauf SRI 7 qui est toujours visible avec son message si filtre permissif)
+    if (fc.length === 0) {
+      if (s === "7" && showSri7) {
+        return `<div class="bg-white rounded-xl shadow-sm border border-ac-cream-dark overflow-hidden">
+          <div class="sri-card-header" style="background:#7f1d1d;color:white;"><div class="flex items-center gap-3">
+            <span class="sri-dot sri-7">7</span><div><div class="font-semibold">SRI 7 — ${desc.titre}</div><div class="text-xs text-red-200">0 fonds dans la gamme</div></div></div></div>
+          <div class="p-5 text-sm text-gray-700 bg-red-50">
+            <strong>Profil non couvert.</strong> L'univers des contrats AV Alliance Courtage ne contient aucun fonds SRI 7 (choix structurel des assureurs).<br>
+            Pour adresser un client SRI 7 : orienter vers un <strong>compte-titres direct</strong> ou <strong>PEA</strong>.
+          </div></div>`;
+      }
+      return '';
+    }
+    return `<div class="bg-white rounded-xl shadow-sm border border-ac-cream-dark overflow-hidden">
+      <div class="sri-card-header s${s}"><div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="sri-dot sri-${s}">${s}</span>
+          <div><div class="font-semibold">SRI ${s} — ${desc.titre}</div><div class="text-xs text-white/80">${fc.length} fonds</div></div>
+        </div>
+      </div><div class="text-xs text-white/90 mt-2">${desc.desc}</div></div>
+      <div class="p-5 space-y-2">${fc.map(cardFond).join('')}</div></div>`;
+  }).join('');
+}
+
+function emptyState() {
+  return '<div class="bg-white rounded-xl p-8 text-center text-gray-500 border border-ac-cream-dark">Aucun fonds ne correspond aux critères.<br><button onclick="resetFilters()" class="mt-3 text-ac-secondary hover:underline text-sm">Réinitialiser</button></div>';
+}
+
+function renderMatrice() {
+  const contratsKeys = contratsSorted.map(c => c[0]);
+  let html = '<thead><tr class="sticky top-0 bg-ac-primary text-white z-10">';
+  html += '<th class="px-2 py-2 text-left sticky left-0 bg-ac-primary z-20 min-w-[140px]">Classe</th>';
+  html += '<th class="px-2 py-2 text-center sticky bg-ac-primary z-20 min-w-[45px]" style="left:140px;">SRI</th>';
+  html += '<th class="px-2 py-2 text-left sticky bg-ac-primary z-20 min-w-[220px]" style="left:185px;">Fonds</th>';
+  contratsKeys.forEach(k => { const c = contrats[k]; html += '<th class="px-1 py-2 text-center min-w-[50px]" style="writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;"><div class="text-[10px] font-normal py-2">' + c.nom + '</div></th>'; });
+  html += '<th class="px-2 py-2 text-center min-w-[60px]">Total</th></tr></thead><tbody>';
+  fonds.forEach(f => {
+    html += '<tr class="border-b border-ac-cream-dark hover:bg-ac-cream/40">';
+    html += '<td class="px-2 py-1 sticky left-0 bg-white text-xs">' + f.classe.substring(5) + '</td>';
+    html += '<td class="px-2 py-1 sticky bg-white text-center" style="left:140px;">' + (f.sri ? '<span class="sri-dot sri-'+f.sri+'">'+f.sri+'</span>' : '-') + '</td>';
+    html += '<td class="px-2 py-1 sticky bg-white text-xs" style="left:185px;"><span class="font-medium text-ac-primary cursor-pointer hover:underline" onclick="openFondModal(\''+f.isin+'\')">'+f.nom+'</span></td>';
+    let total = 0;
+    contratsKeys.forEach(k => {
+      const has = f.contrats.includes(k); if (has) total++;
+      html += '<td class="px-1 py-1 text-center ' + (has ? 'bg-emerald-100 text-emerald-700 font-bold' : 'text-gray-300') + '">' + (has ? '✓' : '·') + '</td>';
+    });
+    html += '<td class="px-2 py-1 text-center font-bold text-ac-primary">' + total + '</td></tr>';
+  });
+  html += '<tr class="bg-ac-cream font-bold">';
+  html += '<td class="px-2 py-2 sticky left-0 bg-ac-cream text-xs" colspan="3">Total fonds / 50</td>';
+  contratsKeys.forEach(k => { const c = fonds.filter(f => f.contrats.includes(k)).length; html += '<td class="px-1 py-2 text-center text-xs text-ac-primary">' + c + '</td>'; });
+  html += '<td></td></tr></tbody>';
+  document.getElementById('matrice-table').innerHTML = html;
+}
+
+function renderActive() {
+  if (state.currentTab === 'contrat') renderContrat();
+  else if (state.currentTab === 'classe') renderClasse();
+  else if (state.currentTab === 'sri') renderSri();
+}
+
+// Filter handlers
+function setClasseChip(classe) {
+  if (classe === '__ALL__') state.classes.clear();
+  else { if (state.classes.has(classe)) state.classes.delete(classe); else state.classes.add(classe); }
+  document.querySelectorAll('#classe-filters .filter-chip').forEach(chip => {
+    const c = chip.dataset.classe;
+    const isActive = (c === '__ALL__' && state.classes.size === 0) || state.classes.has(c);
+    chip.classList.toggle('active', isActive);
+    if (isActive) { chip.classList.remove('bg-white','text-ac-ink','border-ac-cream-dark'); chip.classList.add('bg-ac-primary','text-white','border-ac-primary'); }
+    else { chip.classList.remove('bg-ac-primary','text-white','border-ac-primary'); chip.classList.add('bg-white','text-ac-ink','border-ac-cream-dark'); }
+  });
+  renderActive();
+}
+function setSriChip(sri) {
+  if (sri === '__ALL__') state.sri.clear();
+  else { const n = Number(sri); if (state.sri.has(n)) state.sri.delete(n); else state.sri.add(n); }
+  document.querySelectorAll('#sri-filters .filter-chip').forEach(chip => {
+    const s = chip.dataset.sri;
+    const isActive = (s === '__ALL__' && state.sri.size === 0) || (s !== '__ALL__' && state.sri.has(Number(s)));
+    chip.classList.toggle('active', isActive);
+    if (isActive) { chip.classList.remove('bg-white','text-ac-ink','border-ac-cream-dark'); chip.classList.add('bg-ac-primary','text-white','border-ac-primary'); }
+    else { chip.classList.remove('bg-ac-primary','text-white','border-ac-primary'); chip.classList.add('bg-white','text-ac-ink','border-ac-cream-dark'); }
+  });
+  renderActive();
+}
+function resetFilters() {
+  state.contrat = '__ALL__'; state.classes.clear(); state.sri.clear();
+  sel.value = '__ALL__';
+  setClasseChip('__ALL__'); setSriChip('__ALL__');
+}
+
+sel.addEventListener('change', () => { state.contrat = sel.value; renderActive(); });
+classeFiltersEl.addEventListener('click', e => { const c = e.target.closest('.filter-chip'); if (c) setClasseChip(c.dataset.classe); });
+sriEl.addEventListener('click', e => { const c = e.target.closest('.filter-chip'); if (c) setSriChip(c.dataset.sri); });
+document.getElementById('btn-reset').addEventListener('click', resetFilters);
+
+// Tabs logic
+const filterBar = document.getElementById('shared-filter-bar');
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('border-ac-primary','text-ac-primary');
+      b.classList.add('border-transparent','text-gray-500');
+    });
+    btn.classList.add('border-ac-primary','text-ac-primary');
+    btn.classList.remove('border-transparent','text-gray-500');
+    document.querySelectorAll('.tab-content').forEach(s => s.classList.add('hidden'));
+    document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
+    state.currentTab = btn.dataset.tab;
+    // La barre de filtres n'est affichée que pour les 3 vues de fonds
+    const showFilters = ['contrat', 'classe', 'sri'].includes(btn.dataset.tab);
+    filterBar.classList.toggle('hidden', !showFilters);
+    // Rendu
+    if (btn.dataset.tab === 'contrat') renderContrat();
+    else if (btn.dataset.tab === 'classe') renderClasse();
+    else if (btn.dataset.tab === 'sri') renderSri();
+    else if (btn.dataset.tab === 'matrice' && !window.__matriceRendered) { renderMatrice(); window.__matriceRendered = true; }
+  });
+});
+
+// Modal
+function openFondModal(isin) {
+  const f = fonds.find(x => x.isin === isin);
+  if (!f) return;
+  const contratNames = f.contrats.map(k => contrats[k]).filter(Boolean);
+  const contratsByType = {};
+  contratNames.forEach(c => { if (!contratsByType[c.type]) contratsByType[c.type] = []; contratsByType[c.type].push(c); });
+  const sfdrBadge = f.sfdr && f.sfdr.includes('9') ? '<span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-medium">Article 9 SFDR</span>' :
+    f.sfdr && f.sfdr.includes('8') ? '<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">Article 8 SFDR</span>' : '';
+  document.getElementById('fond-modal-content').innerHTML = `
+    <div class="brand-gradient text-white p-6 rounded-t-xl">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="text-xs uppercase tracking-widest text-blue-200 mb-1">${f.classe}</div>
+          <h2 class="text-2xl font-light">${f.nom}</h2>
+          <div class="text-sm text-blue-100 mt-2">${f.sg}</div>
+          <div class="text-xs text-blue-200 mt-1">ISIN ${f.isin}${f.cat_quantalys ? ' · ' + f.cat_quantalys : ''}</div>
+        </div>
+        <button onclick="closeFondModal()" class="text-white hover:text-blue-200 text-2xl leading-none">&times;</button>
+      </div>
+    </div>
+    <div class="p-6 space-y-5">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-ac-cream rounded-lg p-3"><div class="text-xs text-gray-500 uppercase tracking-wider">Note</div><div class="font-medium text-lg">${starRating(f.note)}</div></div>
+        <div class="bg-ac-cream rounded-lg p-3"><div class="text-xs text-gray-500 uppercase tracking-wider">Score Quantalys</div><div class="font-medium text-lg text-ac-primary">${f.score}/100</div></div>
+        <div class="bg-ac-cream rounded-lg p-3"><div class="text-xs text-gray-500 uppercase tracking-wider">SRI</div><div class="font-medium text-lg text-ac-primary flex items-center gap-2">${f.sri ? '<span class="sri-dot sri-'+f.sri+'">'+f.sri+'</span>' : '—'}<span class="text-xs text-gray-400">/ 7</span></div></div>
+        <div class="bg-ac-cream rounded-lg p-3"><div class="text-xs text-gray-500 uppercase tracking-wider">Score composite</div><div class="font-medium text-lg text-ac-secondary">${f.score_composite}</div></div>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ac-primary mb-2">Métriques</h3>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+          <div class="flex justify-between border-b border-ac-cream-dark py-1.5"><span class="text-gray-600">Perf cumulée 5A</span><span class="font-medium ${f.perf_5a && f.perf_5a > 0 ? 'text-emerald-700' : ''}">${fmtPct(f.perf_5a)}</span></div>
+          <div class="flex justify-between border-b border-ac-cream-dark py-1.5"><span class="text-gray-600">Sharpe 3A</span><span class="font-medium">${fmtNum(f.sharpe_3a)}</span></div>
+          <div class="flex justify-between border-b border-ac-cream-dark py-1.5"><span class="text-gray-600">Volatilité 3A</span><span class="font-medium">${fmtPct(f.vol_3a)}</span></div>
+          <div class="flex justify-between border-b border-ac-cream-dark py-1.5"><span class="text-gray-600">Frais courants</span><span class="font-medium">${fmtPct(f.frais)}</span></div>
+          <div class="flex justify-between border-b border-ac-cream-dark py-1.5"><span class="text-gray-600">Encours</span><span class="font-medium">${fmtMeuro(f.encours_m)}</span></div>
+          <div class="flex justify-between border-b border-ac-cream-dark py-1.5"><span class="text-gray-600">SFDR</span><span class="font-medium">${f.sfdr || '—'}</span></div>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ac-primary mb-3">Contrats éligibles <span class="text-sm text-gray-500 font-normal">(${contratNames.length})</span></h3>
+        <div class="space-y-3">
+          ${['AV','CAPI','PER','PERP'].filter(t => contratsByType[t]).map(t => `
+            <div>
+              <div class="text-xs uppercase tracking-wider text-gray-500 mb-2">${t} (${contratsByType[t].length})</div>
+              <div class="flex flex-wrap gap-2">${contratsByType[t].map(c => '<span class="chip-eligible text-xs px-2.5 py-1 rounded-full">' + c.nom + '</span>').join('')}</div>
+            </div>
+          `).join('')}
+        </div>
+        ${sfdrBadge ? '<div class="mt-3">' + sfdrBadge + '</div>' : ''}
+      </div>
+      <div class="pt-4 border-t border-ac-cream-dark text-center">
+        <a href="https://www.quantalys.com/Fonds/Recherche?q=${f.isin}" target="_blank" class="inline-flex items-center px-4 py-2 bg-ac-primary text-white rounded-lg hover:bg-ac-primary-light text-sm font-medium">Voir la fiche Quantalys →</a>
+      </div>
+    </div>
+  `;
+  document.getElementById('fond-modal').classList.remove('hidden');
+}
+function closeFondModal() { document.getElementById('fond-modal').classList.add('hidden'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFondModal(); });
+
+// Init
+renderContrat();
+</script>
+
+</body>
+</html>
